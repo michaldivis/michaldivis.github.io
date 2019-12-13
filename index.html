@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>How to install PostgreSQL 12.1 from binaries</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+        }
+
+        .codeblock{
+            background-color: #ffe6e6;
+            color: #660000;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .container {
+            border: 1px solid #f2f2f2;
+            border-radius: 5px;
+            padding: 10px;
+            max-width: 900px;
+            display: inline-block;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container">
+
+
+        <h1>How to install PostgreSQL 12.1 from binaries</h1>
+        <p><i>NOTE: This tutorial talks about PostgreSQL version 12.1 but should be applicable to pretty much any
+                version.</i></p>
+        <p>Recently, I needed to install the PostgreSQL database along with my WPF app. However, putting the PostgreSQL
+            12.1
+            installer into my app's installer as a custom action just didn't work for some reason. The PostgreSQL
+            installer
+            kept shutting down and I didn't want to spare anymore precious time on a solution I didn't even really like.
+        </p>
+        <p>So I've done some digging and it turned out, PostgreSQL has been kind enough to provide the raw bindary
+            files, so
+            you can install it your self. This process has been documented in a few blogposts I've found, however, none
+            of
+            them showed how to <b>make your database run on a different that the default port</b>. And that is something
+            I
+            wanted. Since I'm installing the database specifically for my app, I want the service name to be something
+            like
+            "myAppPostgreSQL12" and run it on a different port, so I don't collide with possible preinstalled versions
+            of
+            PostgreSQL.</p>
+        <p>Let's do this!</p>
+        <h2>1 - Download the binaries</h2>
+        Download the binaries zip file from <a href="https://www.enterprisedb.com/download-postgresql-binaries">here</a>
+        <h2>2 - Extract the binaries</h2>
+        <p>Extract the files and put the contents of the pgsql folder wherever you like, for this example, we'll put
+            them in
+            C:\Users\User\Desktop\CustomPostgreSQL</p>
+        <h2>3 - Create the data folder</h2>
+        <p>Create a folder called data in the C:\Users\User\Desktop\CustomPostgreSQL</p>
+        <h2>4 - Launch CMD and cd into the bin directory</h2>
+        <p>Now launch CMD as administrator and use this command to go to the bin directory</p>
+        <div class="codeblock">
+                <code>cd C:\Users\User\Desktop\CustomPostgreSQL\bin</code>
+        </div>
+        <h2>5 - Create a database cluster</h2>
+        <p>Now let's create a db cluster. In this step, there are two options of setting the superuser password:
+            manually
+            setting the password from console, reading the password from a file.</p>
+        <p>Manually setting the password from console:</p>
+        <div class="codeblock">
+                <code>initdb -U postgres -A password -E utf8 -W -D "C:\Users\User\Desktop\CustomPostgreSQL\data"</code>
+        </div>
+        
+        <p>Reading the password from a file (* it reads whatever is on the first line of the file and uses that as a
+            password. The file pw.txt is created by me, it can by named whatever and be wherever you like):</p>
+            <div class="codeblock">
+                    <code>initdb -U postgres -A password -E utf8 --pwfile "C:\Users\User\Desktop\CustomPostgreSQL\pw.txt" -D "C:\Users\User\Desktop\CustomPostgreSQL\data"</code>
+            </div>
+        
+        <p>There are many parameters this can take, so I'll go over the ones used here:</p>
+        <ul>
+            <li>-U postgres is the name of the superuser</li>
+            <li>-A password is an authentication method</li>
+            <li>-E utf8 is the default encoding</li>
+            <li>-W means the program will prompt you to create a password manually</li>
+            <li>-D is a path to the data directory</li>
+            <li>--pwfile is a path to the file that contains the password</li>
+        </ul>
+
+        <p>You can take a look at all the parameters <a
+                href="https://www.postgresql.org/docs/12/app-initdb.html">here</a>
+        </p>
+        <h2>6 - Register the database as a service</h2>
+        <p>Finally, we register the thing as a windows service and we're done.</p>
+        <div class="codeblock">
+                <code>pg_ctl register -N "OurCustomPostgreSQLService" -U "LocalSystem" -D "C:\Users\User\Desktop\CustomPostgreSQL\data" -w -o "-p 5434"</code>
+        </div>
+        
+        <p>The -o "-p 5434" make the service run on a specific port and you can leave it out if you're ok with the
+            default
+            5432 port.</p>
+        <p>Let's go over the parameters again:</p>
+
+        <ul>
+            <li>-N "OurCustomPostgreSQLService" sets the name of the service to OurCustomPostgreSQLService</li>
+            <li>-U "LocalSystem" sets the user that's going to be running the service to LocalSystem user</li>
+            <li>-D "C:\Users\User\Desktop\CustomPostgreSQL\data" sets the path to our data directory</li>
+            <li>-w just tells the program to wait for the result and report success/failure</li>
+            <li>-o "-p 5434" sets to port the service is gonna be running on to 5434 instead of the default 5432</p>
+            </li>
+        </ul>
+
+        <h2>7 - Add some service description (optional)</h2>
+        <p>If you want, you can set a description for the service so anyone else might be able to tell what it is.</p>
+        <div class="codeblock">
+                <code>sc description OurCustomPostgreSQLService "A custom PostgreSQL service running on port 5434"</code>
+        </div>
+        
+        <h2>Wrapping up</h2>
+        <p>I'll update this post if I find out any other useful information. Cheers!</p>
+    </div>
+</body>
+
+</html>
