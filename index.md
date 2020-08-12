@@ -1,6 +1,6 @@
 # Welcome to my dev blog!
 Who am I?
-My name is Michal Diviš. I'm a C# developer, focused on WPF and Xamarin.Forms full stack development.
+My name is Michal. I'm a C# developer, focused on WPF and Xamarin.Forms full stack development.
 
 ## Latest posts
 [Creating a shared EF Core database project for use in WPF and Xamarin.Forms apps](posts/2020_08_12_creating_a_shared_ef_core_database_for_wpf_and_xamarin_forms.md)
