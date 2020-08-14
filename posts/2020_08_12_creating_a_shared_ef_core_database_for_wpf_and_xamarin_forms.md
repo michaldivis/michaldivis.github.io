@@ -1,3 +1,4 @@
+# Creating a shared EF Core database project for use in WPF and Xamarin.Forms apps
 *I could never find a good example of using a single EntityFramework Core project in both WPF and Xamarin.Forms apps, with multiple providers. In theory, it's dead simple, but there are a few little things you have to tinker with to make it work. Here's how...*
 
 ### The basic idea
