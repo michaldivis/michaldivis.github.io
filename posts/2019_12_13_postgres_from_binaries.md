@@ -10,7 +10,7 @@ So I've done some digging and it turned out, PostgreSQL has been kind enough to 
 Let's do this!
 
 ## 1 - Download the binaries
-Download the binaries zip file from here
+Download the binaries zip file from [here](https://www.postgresql.org/download/)
 ## 2 - Extract the binaries
 
 Extract the files and put the contents of the pgsql folder wherever you like, for this example, we'll put them in C:\Users\User\Desktop\CustomPostgreSQL
